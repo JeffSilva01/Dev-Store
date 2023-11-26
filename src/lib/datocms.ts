@@ -1,5 +1,20 @@
 import { env } from '@/env'
 
+const SEARCH_PRODUCT_BY_TITLE = `
+query SearchProductByTitle($query: String!) {
+  allProducts(filter: {title: {matches: {pattern: $query}}}) {
+    title
+    description
+    price
+    id
+    image {
+      url
+    }
+    featured
+  }
+}  
+`
+
 const GET_PRODUCT_BY_SLUG = `
 query GetProductBySlug($slug: String!) {
   product(filter: {slug: {eq: $slug}}) {
@@ -32,7 +47,11 @@ query GetProductFeatured {
 }
 `
 
-export const query = { GET_PRODUCT_BY_SLUG, GET_PRODUCT_FEATURED }
+export const query = {
+  GET_PRODUCT_BY_SLUG,
+  GET_PRODUCT_FEATURED,
+  SEARCH_PRODUCT_BY_TITLE,
+}
 
 type ApiProps = {
   query: string
