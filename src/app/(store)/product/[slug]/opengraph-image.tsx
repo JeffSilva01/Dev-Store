@@ -1,5 +1,5 @@
-import { api } from '@/data/api'
 import { Product } from '@/data/type/product'
+import colors from 'tailwindcss/colors'
 import { apiDatoCMS, query } from '@/lib/datocms'
 import { ImageResponse } from 'next/og'
 
@@ -22,23 +22,25 @@ async function getProduct(slug: string): Promise<Product> {
   return data.product
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  const product = getProduct(params.slug)
+export default async function OgImage({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const product = await getProduct(params.slug)
 
   return new ImageResponse(
     (
       <div
         style={{
-          fontSize: 128,
-          background: 'white',
+          background: colors.zinc[950],
           width: '100%',
           height: '100%',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          flexDirection: 'column',
         }}
       >
-        About Acme
+        <img src={product.image.url} alt="" style={{ width: '100%' }} />
       </div>
     ),
     {
