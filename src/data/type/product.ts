@@ -3,7 +3,9 @@ export type Product = {
   title: string
   slug: string
   price: number
-  image: string
+  image: {
+    url: string
+  }
   description: string
   featured: boolean
 }

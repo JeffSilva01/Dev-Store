@@ -1,18 +1,16 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { api } from '@/data/api'
 import { Product } from '@/data/type/product'
 import { Metadata } from 'next'
+import { apiDatoCMS, query } from '@/lib/datocms'
 
 export const metadata: Metadata = {
   title: 'Home',
 }
 
 async function getFeaturedProducts(): Promise<Product[]> {
-  const response = await api('/products/featured')
-  const { products } = await response.json()
-
-  return products
+  const { data } = await apiDatoCMS({ query: query.GET_PRODUCT_FEATURED })
+  return data.allProducts
 }
 
 export default async function Home() {
@@ -25,7 +23,7 @@ export default async function Home() {
         className="group relative col-span-6 row-span-6 flex items-start justify-center rounded-lg bg-zinc-900 overflow-hidden"
       >
         <Image
-          src={highlightedProduct.image}
+          src={highlightedProduct.image.url}
           width={830}
           quality={100}
           height={830}
@@ -50,7 +48,7 @@ export default async function Home() {
           className="relative group col-span-3 row-span-3 flex items-start justify-center rounded-lg bg-zinc-900 overflow-hidden"
         >
           <Image
-            src={product.image}
+            src={product.image.url}
             width={830}
             quality={100}
             height={830}

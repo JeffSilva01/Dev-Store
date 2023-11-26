@@ -2,6 +2,10 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   NEXT_PUBLIC_API_BASE_URL: z.string().url(),
+  NEXT_PUBLIC_DATOCMS_API_TOKEN: z.string(),
+  NEXT_PUBLIC_DATOCMS_BASE_URL: z
+    .string()
+    .default('https://graphql.datocms.com/'),
 })
 
 const parseEnv = envSchema.safeParse(process.env)

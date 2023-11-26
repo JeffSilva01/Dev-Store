@@ -1,5 +1,5 @@
-import { api } from '@/data/api'
 import { Product } from '@/data/type/product'
+import { apiDatoCMS, query } from '@/lib/datocms'
 import { Metadata } from 'next'
 import Image from 'next/image'
 
@@ -10,10 +10,12 @@ type ProductProps = {
 }
 
 async function getProduct(slug: string): Promise<Product> {
-  const response = await api(`/products/${slug}`)
-  const { product } = await response.json()
+  const { data } = await apiDatoCMS({
+    query: query.GET_PRODUCT_BY_SLUG,
+    variables: { slug },
+  })
 
-  return product
+  return data.product
 }
 
 export async function generateMetadata({
@@ -27,10 +29,11 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const response = await api('/products/featured')
-  const { products }: { products: Product[] } = await response.json()
+  const { data } = await apiDatoCMS({
+    query: query.GET_PRODUCT_FEATURED,
+  })
 
-  return products.map((product) => ({ slug: product.slug }))
+  return data.allProducts.map((product: Product) => ({ slug: product.slug }))
 }
 
 export default async function Product({ params }: ProductProps) {
@@ -40,7 +43,7 @@ export default async function Product({ params }: ProductProps) {
     <div className="relative grid max-h-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
         <Image
-          src={product.image}
+          src={product.image.url}
           width={1000}
           height={1000}
           quality={100}
