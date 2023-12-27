@@ -1,4 +1,5 @@
 import { AddToCartButton } from '@/components/add-to-cart-button'
+import { ProductSize } from '@/components/product-size'
 import { Product } from '@/data/type/product'
 import { apiDatoCMS, query } from '@/lib/datocms'
 import { Metadata } from 'next'
@@ -7,6 +8,9 @@ import Image from 'next/image'
 type ProductProps = {
   params: {
     slug: string
+  }
+  searchParams: {
+    size: 'P' | 'M' | 'G' | 'GG'
   }
 }
 
@@ -37,8 +41,9 @@ export async function generateStaticParams() {
   return data.allProducts.map((product: Product) => ({ slug: product.slug }))
 }
 
-export default async function Product({ params }: ProductProps) {
+export default async function Product({ params, searchParams }: ProductProps) {
   const product = await getProduct(params.slug)
+  const { size } = searchParams
 
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">
@@ -75,30 +80,18 @@ export default async function Product({ params }: ProductProps) {
         <div className="mt-8 space-y-4">
           <span className="block font-semibold">Tamanos</span>
           <div className="flex gap-2">
-            <button
-              type="button"
-              className="flex h-9 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-sm font-semibold"
-            >
+            <ProductSize href="?size=P" active={size === 'P'}>
               P
-            </button>
-            <button
-              type="button"
-              className="flex h-9 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-sm font-semibold"
-            >
+            </ProductSize>
+            <ProductSize href="?size=M" active={size === 'M'}>
               M
-            </button>
-            <button
-              type="button"
-              className="flex h-9 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-sm font-semibold"
-            >
+            </ProductSize>
+            <ProductSize href="?size=G" active={size === 'G'}>
               G
-            </button>
-            <button
-              type="button"
-              className="flex h-9 w-14 items-center justify-center rounded-full border border-zinc-700 bg-zinc-800 text-sm font-semibold"
-            >
+            </ProductSize>
+            <ProductSize href="?size=GG" active={size === 'GG'}>
               GG
-            </button>
+            </ProductSize>
           </div>
         </div>
         <AddToCartButton productId={product.id} />
